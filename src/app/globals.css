@@ -1,0 +1,119 @@
+@import "tailwindcss";
+
+:root {
+  --background: #f7f8ff;
+  --foreground: #050505;
+}
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --font-sans: var(--font-geist-sans);
+  --font-mono: var(--font-geist-mono);
+}
+
+body {
+  background: var(--background);
+  color: var(--foreground);
+}
+
+button,
+a,
+input {
+  font: inherit;
+}
+
+.petdex-cloud {
+  background:
+    radial-gradient(
+      circle at 49% 18%,
+      rgb(255 255 255 / 0.96) 0 13%,
+      rgb(255 255 255 / 0.62) 24%,
+      transparent 42%
+    ),
+    radial-gradient(
+      circle at 12% 68%,
+      rgb(216 233 255 / 0.9) 0 20%,
+      transparent 48%
+    ),
+    radial-gradient(
+      circle at 83% 44%,
+      rgb(100 120 246 / 0.82) 0 25%,
+      rgb(82 102 234 / 0.62) 43%,
+      transparent 68%
+    ),
+    linear-gradient(120deg, #d8e9ff 0%, #f7f8ff 47%, #c9c6ff 100%);
+}
+
+.petdex-cloud::before {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  content: "";
+  background:
+    radial-gradient(
+      ellipse at 18% 48%,
+      rgb(255 255 255 / 0.28),
+      transparent 34%
+    ),
+    radial-gradient(
+      ellipse at 30% 38%,
+      rgb(255 255 255 / 0.18),
+      transparent 28%
+    ),
+    linear-gradient(
+      100deg,
+      rgb(255 255 255 / 0.16),
+      transparent 35%,
+      rgb(255 255 255 / 0.1)
+    );
+  filter: blur(18px);
+}
+
+.glass-panel {
+  background: rgb(255 255 255 / 0.68);
+  border: 1px solid rgb(255 255 255 / 0.72);
+  box-shadow: 0 24px 80px rgb(42 55 120 / 0.16);
+  backdrop-filter: blur(18px);
+}
+
+.pet-sprite-frame {
+  --pet-scale: 1;
+  width: calc(192px * var(--pet-scale));
+  height: calc(208px * var(--pet-scale));
+  overflow: hidden;
+}
+
+.pet-sprite {
+  --sprite-row: 0;
+  --sprite-frames: 6;
+  --sprite-duration: 1100ms;
+  --sprite-y: calc(var(--sprite-row) * -208px);
+  --sprite-end-x: calc(var(--sprite-frames) * -192px);
+  width: 192px;
+  height: 208px;
+  background-image: var(--sprite-url);
+  background-repeat: no-repeat;
+  background-size: 1536px 1872px;
+  image-rendering: pixelated;
+  transform: scale(var(--pet-scale));
+  transform-origin: top left;
+  animation: pet-state var(--sprite-duration) steps(var(--sprite-frames))
+    infinite;
+}
+
+@keyframes pet-state {
+  from {
+    background-position: 0 var(--sprite-y);
+  }
+
+  to {
+    background-position: var(--sprite-end-x) var(--sprite-y);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .pet-sprite {
+    animation: none;
+  }
+}
