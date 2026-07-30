@@ -188,64 +188,43 @@ export function PetSubmitForm() {
 
     setSubmission({ kind: "uploading", step: "uploading" });
 
-    let zipUrl = "";
-    let spritesheetUrl = "";
-    let petJsonUrl = "";
-
     try {
       const uploaded = await startUpload([zipFile, spriteFile, petJsonFile]);
-      if (uploaded && uploaded.length >= 3) {
-        const zipResult = uploaded.find((u) => u.name === parsed.zipFileName);
-        const spriteResult = uploaded.find((u) =>
-          u.name.endsWith("-spritesheet.webp"),
-        );
-        const petJsonResult = uploaded.find((u) => u.name.endsWith("-pet.json"));
 
-        if (zipResult && spriteResult && petJsonResult) {
-          zipUrl = zipResult.serverData?.url ?? zipResult.ufsUrl;
-          spritesheetUrl = spriteResult.serverData?.url ?? spriteResult.ufsUrl;
-          petJsonUrl = petJsonResult.serverData?.url ?? petJsonResult.ufsUrl;
-        }
+      if (!uploaded || uploaded.length < 3) {
+        throw new Error("Failed to upload all files to UploadThing.");
       }
-    } catch (err) {
-      console.warn("UploadThing unavailable, using FormData streaming fallback", err);
-    }
 
-    setSubmission({ kind: "uploading", step: "registering" });
+      const zipResult = uploaded.find((u) => u.name === parsed.zipFileName);
+      const spriteResult = uploaded.find((u) =>
+        u.name.endsWith("-spritesheet.webp"),
+      );
+      const petJsonResult = uploaded.find((u) => u.name.endsWith("-pet.json"));
 
-    try {
-      let res: Response;
-      if (zipUrl && spritesheetUrl && petJsonUrl) {
-        res = await fetch("/api/submit", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({
-            zipUrl,
-            spritesheetUrl,
-            petJsonUrl,
-            displayName: parsed.displayName,
-            description: parsed.description,
-            petId: parsed.petId,
-            spritesheetWidth: parsed.spritesheetWidth,
-            spritesheetHeight: parsed.spritesheetHeight,
-          }),
-        });
-      } else {
-        const formData = new FormData();
-        formData.append("zip", zipFile);
-        formData.append("spritesheet", spriteFile);
-        formData.append("petJsonUrl", parsed.petJsonString);
-        formData.append("displayName", parsed.displayName);
-        formData.append("description", parsed.description);
-        formData.append("petId", parsed.petId);
-        formData.append("spritesheetWidth", String(parsed.spritesheetWidth));
-        formData.append("spritesheetHeight", String(parsed.spritesheetHeight));
-
-        res = await fetch("/api/submit", {
-          method: "POST",
-          body: formData,
-        });
+      if (!zipResult || !spriteResult || !petJsonResult) {
+        throw new Error("Could not find required files in UploadThing response.");
       }
+
+      const zipUrl = zipResult.serverData?.url ?? zipResult.ufsUrl;
+      const spritesheetUrl = spriteResult.serverData?.url ?? spriteResult.ufsUrl;
+      const petJsonUrl = petJsonResult.serverData?.url ?? petJsonResult.ufsUrl;
+
+      setSubmission({ kind: "uploading", step: "registering" });
+
+      const res = await fetch("/api/submit", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          zipUrl,
+          spritesheetUrl,
+          petJsonUrl,
+          displayName: parsed.displayName,
+          description: parsed.description,
+          petId: parsed.petId,
+          spritesheetWidth: parsed.spritesheetWidth,
+          spritesheetHeight: parsed.spritesheetHeight,
+        }),
+      });
 
       if (!res.ok) {
         let data: { message?: string; error?: string } = {};
@@ -253,7 +232,7 @@ export function PetSubmitForm() {
           data = await res.json();
         } catch {
           data = {
-            message: `Server error (${res.status} ${res.statusText}). If you uploaded large files, please configure UploadThing in Vercel.`,
+            message: `Server error (${res.status} ${res.statusText}).`,
           };
         }
         track("pet_submission_failed", {
@@ -283,11 +262,16 @@ export function PetSubmitForm() {
         slug: data.slug,
         displayName: parsed.displayName,
       });
-    } catch (fetchErr) {
-      console.error("Submission fetch error:", fetchErr);
+    } catch (e: any) {
+      console.error("UploadThing or API failed:", e);
+      track("pet_submission_failed", {
+        pet_id: parsed.petId,
+        stage: "upload",
+        error_code: "uploadthing_failed",
+      });
       setSubmission({
         kind: "error",
-        message: "Network error submitting pet. Please try again.",
+        message: `Upload failed: ${e.message || e}. Please ensure UploadThing is correctly configured.`,
       });
     }
   }
