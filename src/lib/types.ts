@@ -28,6 +28,8 @@ export type PetdexPet = {
   };
 };
 
+export type Pet = PetdexPet;
+
 export const PET_KINDS: PetKind[] = ["creature", "object", "character"];
 
 export const PET_VIBES: PetVibe[] = [
