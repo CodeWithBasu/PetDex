@@ -18,7 +18,7 @@ import {
 import { petStates } from "@/lib/pet-states";
 import type { OurFileRouter } from "@/lib/uploadthing";
 
-const { useUploadThing } = generateReactHelpers<OurFileRouter>();
+const { useUploadThing, uploadFiles } = generateReactHelpers<OurFileRouter>();
 
 type ParsedPet = {
   petId: string;
@@ -189,10 +189,12 @@ export function PetSubmitForm() {
     setSubmission({ kind: "uploading", step: "uploading" });
 
     try {
-      const uploaded = await startUpload([zipFile, spriteFile, petJsonFile]);
+      const uploaded = await uploadFiles("petPackUploader", {
+        files: [zipFile, spriteFile, petJsonFile],
+      });
 
       if (!uploaded || uploaded.length < 3) {
-        throw new Error("Failed to upload all files to UploadThing.");
+        throw new Error(`Failed to upload all files. Response: ${JSON.stringify(uploaded)}`);
       }
 
       const zipResult = uploaded.find((u) => u.name === parsed.zipFileName);
