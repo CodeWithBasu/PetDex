@@ -208,35 +208,44 @@ export function PetSubmitForm() {
         }
       }
     } catch (err) {
-      console.warn("UploadThing unavailable, using base64 payload fallback", err);
-    }
-
-    // Fallback if UploadThing is unconfigured or failed
-    if (!zipUrl || !spritesheetUrl || !petJsonUrl) {
-      zipUrl = await blobToDataUrl(parsed.zipBlob);
-      spritesheetUrl = await blobToDataUrl(parsed.spritesheetBlob);
-      petJsonUrl = `data:application/json;base64,${btoa(
-        unescape(encodeURIComponent(parsed.petJsonString)),
-      )}`;
+      console.warn("UploadThing unavailable, using FormData streaming fallback", err);
     }
 
     setSubmission({ kind: "uploading", step: "registering" });
 
     try {
-      const res = await fetch("/api/submit", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          zipUrl,
-          spritesheetUrl,
-          petJsonUrl,
-          displayName: parsed.displayName,
-          description: parsed.description,
-          petId: parsed.petId,
-          spritesheetWidth: parsed.spritesheetWidth,
-          spritesheetHeight: parsed.spritesheetHeight,
-        }),
-      });
+      let res: Response;
+      if (zipUrl && spritesheetUrl && petJsonUrl) {
+        res = await fetch("/api/submit", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            zipUrl,
+            spritesheetUrl,
+            petJsonUrl,
+            displayName: parsed.displayName,
+            description: parsed.description,
+            petId: parsed.petId,
+            spritesheetWidth: parsed.spritesheetWidth,
+            spritesheetHeight: parsed.spritesheetHeight,
+          }),
+        });
+      } else {
+        const formData = new FormData();
+        formData.append("zip", zipFile);
+        formData.append("spritesheet", spriteFile);
+        formData.append("petJsonUrl", parsed.petJsonString);
+        formData.append("displayName", parsed.displayName);
+        formData.append("description", parsed.description);
+        formData.append("petId", parsed.petId);
+        formData.append("spritesheetWidth", String(parsed.spritesheetWidth));
+        formData.append("spritesheetHeight", String(parsed.spritesheetHeight));
+
+        res = await fetch("/api/submit", {
+          method: "POST",
+          body: formData,
+        });
+      }
 
       if (!res.ok) {
         const data = (await res.json().catch(() => ({}))) as {
@@ -467,15 +476,6 @@ function measureImage(url: string): Promise<{ width: number; height: number }> {
       resolve({ width: img.naturalWidth, height: img.naturalHeight });
     img.onerror = () => resolve({ width: 0, height: 0 });
     img.src = url;
-  });
-}
-
-function blobToDataUrl(blob: Blob): Promise<string> {
-  return new Promise((resolve, reject) => {
-    const reader = new FileReader();
-    reader.onloadend = () => resolve(reader.result as string);
-    reader.onerror = reject;
-    reader.readAsDataURL(blob);
   });
 }
 
