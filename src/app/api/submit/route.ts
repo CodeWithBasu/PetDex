@@ -165,8 +165,12 @@ export async function POST(req: Request) {
       ownerId: effectiveUserId,
       ownerEmail,
     });
-  } catch (dbErr) {
+  } catch (dbErr: any) {
     console.warn("Database insert exception during pet submission:", dbErr);
+    return NextResponse.json(
+      { error: "db_error", message: `Database error: ${dbErr.message || "Unknown error"}` },
+      { status: 500 }
+    );
   }
 
   // Notify owner email (Resend) — silent fail if not configured

@@ -248,10 +248,14 @@ export function PetSubmitForm() {
       }
 
       if (!res.ok) {
-        const data = (await res.json().catch(() => ({}))) as {
-          message?: string;
-          error?: string;
-        };
+        let data: { message?: string; error?: string } = {};
+        try {
+          data = await res.json();
+        } catch {
+          data = {
+            message: `Server error (${res.status} ${res.statusText}). If you uploaded large files, please configure UploadThing in Vercel.`,
+          };
+        }
         track("pet_submission_failed", {
           pet_id: parsed.petId,
           stage: "register",
