@@ -1,18 +1,14 @@
-import { clerkMiddleware, createRouteMatcher } from "@clerk/nextjs/server";
-
-const isProtected = createRouteMatcher([
-  "/submit",
-  "/submit/(.*)",
-  "/api/submit",
-  "/api/submit/(.*)",
-  "/admin",
-  "/admin/(.*)",
-  "/api/admin",
-  "/api/admin/(.*)",
-]);
+import { clerkMiddleware } from "@clerk/nextjs/server";
 
 export default clerkMiddleware(async (auth, req) => {
-  if (isProtected(req)) {
+  const { pathname } = req.nextUrl;
+  const isProtected =
+    pathname.startsWith("/submit") ||
+    pathname.startsWith("/api/submit") ||
+    pathname.startsWith("/admin") ||
+    pathname.startsWith("/api/admin");
+
+  if (isProtected) {
     await auth.protect();
   }
 });
