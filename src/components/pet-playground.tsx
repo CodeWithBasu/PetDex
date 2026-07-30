@@ -1,11 +1,12 @@
 "use client";
 
-import { useState, useEffect } from "react";
-import { Apple, Heart, Play, RefreshCw, Sparkles, Volume2 } from "lucide-react";
+import { useState } from "react";
+import { Apple, Heart, Sparkles } from "lucide-react";
 
 import { petAudio } from "@/lib/audio";
 import { PetSprite } from "@/components/pet-sprite";
 import { Pet } from "@/lib/types";
+import { PetStateId } from "@/lib/pet-states";
 
 type Environment = "cozy" | "cyberpunk" | "forest" | "synthwave" | "void";
 
@@ -122,7 +123,7 @@ export function PetPlayground({ pet }: PetPlaygroundProps) {
         <div className="flex flex-col items-center">
           <PetSprite
             src={pet.spritesheetPath}
-            forcedState={currentState}
+            state={currentState as PetStateId}
             scale={1.2}
             label={`${pet.displayName} in state ${currentState}`}
           />
