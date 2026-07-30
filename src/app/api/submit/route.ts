@@ -47,14 +47,45 @@ export async function POST(req: Request) {
     );
   }
 
-  let body: SubmitBody;
-  try {
-    body = (await req.json()) as SubmitBody;
-  } catch {
-    return NextResponse.json(
-      { error: "invalid_json", message: "Invalid submission payload." },
-      { status: 400 },
-    );
+  let body: Partial<SubmitBody> = {};
+  const contentType = req.headers.get("content-type") || "";
+
+  if (contentType.includes("multipart/form-data")) {
+    try {
+      const formData = await req.formData();
+      body.displayName = (formData.get("displayName") as string) || "";
+      body.description = (formData.get("description") as string) || "";
+      body.petId = (formData.get("petId") as string) || "";
+      body.spritesheetWidth = Number(formData.get("spritesheetWidth")) || 1536;
+      body.spritesheetHeight = Number(formData.get("spritesheetHeight")) || 1872;
+
+      const spriteFile = formData.get("spritesheet") as File | null;
+      const zipFile = formData.get("zip") as File | null;
+
+      if (spriteFile) {
+        const buf = Buffer.from(await spriteFile.arrayBuffer());
+        body.spritesheetUrl = `data:image/webp;base64,${buf.toString("base64")}`;
+      }
+      if (zipFile) {
+        const buf = Buffer.from(await zipFile.arrayBuffer());
+        body.zipUrl = `data:application/zip;base64,${buf.toString("base64")}`;
+      }
+      body.petJsonUrl = (formData.get("petJsonUrl") as string) || "{}";
+    } catch {
+      return NextResponse.json(
+        { error: "invalid_formdata", message: "Failed to parse form data." },
+        { status: 400 },
+      );
+    }
+  } else {
+    try {
+      body = (await req.json()) as SubmitBody;
+    } catch {
+      return NextResponse.json(
+        { error: "invalid_json", message: "Invalid submission payload." },
+        { status: 400 },
+      );
+    }
   }
 
   const requiredFields = [
@@ -95,7 +126,7 @@ export async function POST(req: Request) {
     );
   }
 
-  const requestedSlug = slugify(body.petId || body.displayName);
+  const requestedSlug = slugify(body.petId || body.displayName || "pet");
   if (!requestedSlug) {
     return NextResponse.json(
       { error: "invalid_slug", message: "Could not generate a valid slug." },
@@ -122,11 +153,11 @@ export async function POST(req: Request) {
     await db.insert(schema.submittedPets).values({
       id,
       slug,
-      displayName: body.displayName.trim().slice(0, 60),
-      description: body.description.trim().slice(0, 280),
-      spritesheetUrl: body.spritesheetUrl,
-      petJsonUrl: body.petJsonUrl,
-      zipUrl: body.zipUrl,
+      displayName: (body.displayName || "Untitled").trim().slice(0, 60),
+      description: (body.description || "").trim().slice(0, 280),
+      spritesheetUrl: body.spritesheetUrl!,
+      petJsonUrl: body.petJsonUrl!,
+      zipUrl: body.zipUrl!,
       kind: "creature",
       vibes: [],
       tags: [],
