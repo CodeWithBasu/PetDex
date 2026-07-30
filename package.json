@@ -6,8 +6,8 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "check": "biome check .",
-    "format": "biome check --write .",
+    "check": "npx biome check .",
+    "format": "npx biome check --write .",
     "generate-assets": "npx tsx scripts/generate-assets.ts",
     "import-pet": "npx tsx scripts/import-pet.ts",
     "build-packs": "npx tsx scripts/build-packs.ts"
