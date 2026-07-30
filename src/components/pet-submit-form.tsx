@@ -168,7 +168,6 @@ export function PetSubmitForm() {
 
   async function handleSubmit() {
     if (!parsed || parsed.issues.length > 0) return;
-    if (!isSignedIn) return;
 
     track("pet_submission_started", { pet_id: parsed.petId });
     setSubmission({ kind: "uploading", step: "validating" });
@@ -223,53 +222,61 @@ export function PetSubmitForm() {
 
     setSubmission({ kind: "uploading", step: "registering" });
 
-    const res = await fetch("/api/submit", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        zipUrl,
-        spritesheetUrl,
-        petJsonUrl,
-        displayName: parsed.displayName,
-        description: parsed.description,
-        petId: parsed.petId,
-        spritesheetWidth: parsed.spritesheetWidth,
-        spritesheetHeight: parsed.spritesheetHeight,
-      }),
-    });
+    try {
+      const res = await fetch("/api/submit", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          zipUrl,
+          spritesheetUrl,
+          petJsonUrl,
+          displayName: parsed.displayName,
+          description: parsed.description,
+          petId: parsed.petId,
+          spritesheetWidth: parsed.spritesheetWidth,
+          spritesheetHeight: parsed.spritesheetHeight,
+        }),
+      });
 
-    if (!res.ok) {
-      const data = (await res.json().catch(() => ({}))) as {
-        message?: string;
-        error?: string;
-      };
-      track("pet_submission_failed", {
+      if (!res.ok) {
+        const data = (await res.json().catch(() => ({}))) as {
+          message?: string;
+          error?: string;
+        };
+        track("pet_submission_failed", {
+          pet_id: parsed.petId,
+          stage: "register",
+          error_code: data.error ?? "unknown",
+          status: res.status,
+        });
+        setSubmission({
+          kind: "error",
+          message:
+            data.message ??
+            (data.error
+              ? `Submission failed: ${data.error}`
+              : "Submission failed"),
+        });
+        return;
+      }
+
+      const data = (await res.json()) as { slug: string };
+      track("pet_submission_succeeded", {
         pet_id: parsed.petId,
-        stage: "register",
-        error_code: data.error ?? "unknown",
-        status: res.status,
+        slug: data.slug,
       });
       setSubmission({
-        kind: "error",
-        message:
-          data.message ??
-          (data.error
-            ? `Submission failed: ${data.error}`
-            : "Submission failed"),
+        kind: "success",
+        slug: data.slug,
+        displayName: parsed.displayName,
       });
-      return;
+    } catch (fetchErr) {
+      console.error("Submission fetch error:", fetchErr);
+      setSubmission({
+        kind: "error",
+        message: "Network error submitting pet. Please try again.",
+      });
     }
-
-    const data = (await res.json()) as { slug: string };
-    track("pet_submission_succeeded", {
-      pet_id: parsed.petId,
-      slug: data.slug,
-    });
-    setSubmission({
-      kind: "success",
-      slug: data.slug,
-      displayName: parsed.displayName,
-    });
   }
 
   return (
@@ -348,7 +355,6 @@ export function PetSubmitForm() {
             <SubmitButton
               disabled={
                 parsed.issues.length > 0 ||
-                !isSignedIn ||
                 submission.kind === "uploading" ||
                 submission.kind === "success"
               }
