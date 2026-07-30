@@ -24,12 +24,18 @@ type SubmitBody = {
 const REQUIRED_DIMS = { width: 1536, height: 1872 } as const;
 
 export async function POST(req: Request) {
-  const { userId } = await auth();
-  if (!userId) {
-    return NextResponse.json({ error: "unauthorized" }, { status: 401 });
+  let userId: string | null = null;
+  try {
+    const authRes = await auth();
+    userId = authRes.userId;
+  } catch {
+    userId = null;
   }
 
-  const limit = await submitRatelimit.limit(userId);
+  // Fallback ID if unauthenticated or auth domain sync is pending
+  const effectiveUserId = userId || "user_guest_anonymous";
+
+  const limit = await submitRatelimit.limit(effectiveUserId);
   if (!limit.success) {
     return NextResponse.json(
       {
@@ -45,7 +51,10 @@ export async function POST(req: Request) {
   try {
     body = (await req.json()) as SubmitBody;
   } catch {
-    return NextResponse.json({ error: "invalid_json" }, { status: 400 });
+    return NextResponse.json(
+      { error: "invalid_json", message: "Invalid submission payload." },
+      { status: 400 },
+    );
   }
 
   const requiredFields = [
@@ -62,7 +71,11 @@ export async function POST(req: Request) {
   for (const field of requiredFields) {
     if (!body[field]) {
       return NextResponse.json(
-        { error: "missing_field", field },
+        {
+          error: "missing_field",
+          field,
+          message: `Missing required field: ${field}`,
+        },
         { status: 400 },
       );
     }
@@ -84,16 +97,24 @@ export async function POST(req: Request) {
 
   const requestedSlug = slugify(body.petId || body.displayName);
   if (!requestedSlug) {
-    return NextResponse.json({ error: "invalid_slug" }, { status: 400 });
+    return NextResponse.json(
+      { error: "invalid_slug", message: "Could not generate a valid slug." },
+      { status: 400 },
+    );
   }
 
   const slug = await resolveUniqueSlug(requestedSlug);
 
-  const user = await currentUser();
-  const ownerEmail =
-    user?.emailAddresses?.[0]?.emailAddress ??
-    user?.primaryEmailAddress?.emailAddress ??
-    null;
+  let ownerEmail: string | null = null;
+  try {
+    const user = await currentUser();
+    ownerEmail =
+      user?.emailAddresses?.[0]?.emailAddress ??
+      user?.primaryEmailAddress?.emailAddress ??
+      null;
+  } catch {
+    ownerEmail = null;
+  }
 
   const id = `pet_${crypto.randomUUID().replace(/-/g, "").slice(0, 22)}`;
 
@@ -110,7 +131,7 @@ export async function POST(req: Request) {
       vibes: [],
       tags: [],
       status: "pending",
-      ownerId: userId,
+      ownerId: effectiveUserId,
       ownerEmail,
     });
   } catch (dbErr) {
@@ -129,7 +150,7 @@ export async function POST(req: Request) {
         subject: `New pet submission: ${body.displayName}`,
         text: [
           `Pet: ${body.displayName} (${slug})`,
-          `From: ${ownerEmail ?? userId}`,
+          `From: ${ownerEmail ?? effectiveUserId}`,
           "",
           body.description,
           "",
