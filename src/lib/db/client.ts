@@ -5,6 +5,7 @@ import * as schema from "./schema";
 
 const databaseUrl =
   process.env.DATABASE_URL ||
+  process.env.POSTGRES_URL ||
   "postgresql://placeholder:placeholder@localhost:5432/petdex";
 
 const sql = neon(databaseUrl);
