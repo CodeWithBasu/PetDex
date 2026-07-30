@@ -189,28 +189,36 @@ export function PetSubmitForm() {
 
     setSubmission({ kind: "uploading", step: "uploading" });
 
-    const uploaded = await startUpload([zipFile, spriteFile, petJsonFile]);
-    if (!uploaded || uploaded.length < 3) {
-      track("pet_submission_failed", {
-        pet_id: parsed.petId,
-        stage: "upload",
-      });
-      setSubmission({
-        kind: "error",
-        message: "Upload failed. Try again.",
-      });
-      return;
+    let zipUrl = "";
+    let spritesheetUrl = "";
+    let petJsonUrl = "";
+
+    try {
+      const uploaded = await startUpload([zipFile, spriteFile, petJsonFile]);
+      if (uploaded && uploaded.length >= 3) {
+        const zipResult = uploaded.find((u) => u.name === parsed.zipFileName);
+        const spriteResult = uploaded.find((u) =>
+          u.name.endsWith("-spritesheet.webp"),
+        );
+        const petJsonResult = uploaded.find((u) => u.name.endsWith("-pet.json"));
+
+        if (zipResult && spriteResult && petJsonResult) {
+          zipUrl = zipResult.serverData?.url ?? zipResult.ufsUrl;
+          spritesheetUrl = spriteResult.serverData?.url ?? spriteResult.ufsUrl;
+          petJsonUrl = petJsonResult.serverData?.url ?? petJsonResult.ufsUrl;
+        }
+      }
+    } catch (err) {
+      console.warn("UploadThing unavailable, using base64 payload fallback", err);
     }
 
-    const zipResult = uploaded.find((u) => u.name === parsed.zipFileName);
-    const spriteResult = uploaded.find((u) =>
-      u.name.endsWith("-spritesheet.webp"),
-    );
-    const petJsonResult = uploaded.find((u) => u.name.endsWith("-pet.json"));
-
-    if (!zipResult || !spriteResult || !petJsonResult) {
-      setSubmission({ kind: "error", message: "Upload incomplete." });
-      return;
+    // Fallback if UploadThing is unconfigured or failed
+    if (!zipUrl || !spritesheetUrl || !petJsonUrl) {
+      zipUrl = await blobToDataUrl(parsed.zipBlob);
+      spritesheetUrl = await blobToDataUrl(parsed.spritesheetBlob);
+      petJsonUrl = `data:application/json;base64,${btoa(
+        unescape(encodeURIComponent(parsed.petJsonString)),
+      )}`;
     }
 
     setSubmission({ kind: "uploading", step: "registering" });
@@ -219,9 +227,9 @@ export function PetSubmitForm() {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
-        zipUrl: zipResult.serverData?.url ?? zipResult.ufsUrl,
-        spritesheetUrl: spriteResult.serverData?.url ?? spriteResult.ufsUrl,
-        petJsonUrl: petJsonResult.serverData?.url ?? petJsonResult.ufsUrl,
+        zipUrl,
+        spritesheetUrl,
+        petJsonUrl,
         displayName: parsed.displayName,
         description: parsed.description,
         petId: parsed.petId,
@@ -453,6 +461,15 @@ function measureImage(url: string): Promise<{ width: number; height: number }> {
       resolve({ width: img.naturalWidth, height: img.naturalHeight });
     img.onerror = () => resolve({ width: 0, height: 0 });
     img.src = url;
+  });
+}
+
+function blobToDataUrl(blob: Blob): Promise<string> {
+  return new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.onloadend = () => resolve(reader.result as string);
+    reader.onerror = reject;
+    reader.readAsDataURL(blob);
   });
 }
 
