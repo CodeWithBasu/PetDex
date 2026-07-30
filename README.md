@@ -2,8 +2,8 @@
 
 [![Next.js 16](https://img.shields.io/badge/Next.js-16_App_Router-black?style=flat-square&logo=next.js)](https://nextjs.org)
 [![React 19](https://img.shields.io/badge/React-19-61dafb?style=flat-square&logo=react)](https://react.dev)
-[![TypeScript](https://img.shields.io/badge/TypeScript-5.0-blue?style=flat-square&logo=typescript)](https://www.typescriptlang.org)
-[![Bun](https://img.shields.io/badge/Bun-1.0-orange?style=flat-square&logo=bun)](https://bun.sh)
+[![TypeScript](https://img.shields.io/badge/TypeScript-5.7-blue?style=flat-square&logo=typescript)](https://www.typescriptlang.org)
+[![npm](https://img.shields.io/badge/npm-10.0+-red?style=flat-square&logo=npm)](https://npmjs.com)
 [![License](https://img.shields.io/badge/License-MIT-emerald?style=flat-square)](LICENSE)
 
 **PetDex** is a public gallery, interactive Tamagotchi playground, and custom creation studio for Codex-compatible animated desktop pets.
@@ -24,7 +24,7 @@
 ## 🚀 Quick Start
 
 ### Prerequisites
-- [Bun](https://bun.sh) (v1.0+) or Node.js (v20+)
+- Node.js (v20+) and npm (v10+)
 
 ### Installation
 
@@ -34,10 +34,10 @@ git clone https://github.com/CodeWithBasu/PetDex.git
 cd PetDex
 
 # Install dependencies
-bun install
+npm install
 
 # Start local development server
-bun dev
+npm run dev
 ```
 
 Open `http://localhost:3000` in your browser.
@@ -68,7 +68,7 @@ PetDex/
 To regenerate downloadable `.zip` archives and the `manifest.json`:
 
 ```bash
-bun run build-packs
+npm run build-packs
 ```
 
 ---
