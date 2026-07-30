@@ -97,21 +97,25 @@ export async function POST(req: Request) {
 
   const id = `pet_${crypto.randomUUID().replace(/-/g, "").slice(0, 22)}`;
 
-  await db.insert(schema.submittedPets).values({
-    id,
-    slug,
-    displayName: body.displayName.trim().slice(0, 60),
-    description: body.description.trim().slice(0, 280),
-    spritesheetUrl: body.spritesheetUrl,
-    petJsonUrl: body.petJsonUrl,
-    zipUrl: body.zipUrl,
-    kind: "creature",
-    vibes: [],
-    tags: [],
-    status: "pending",
-    ownerId: userId,
-    ownerEmail,
-  });
+  try {
+    await db.insert(schema.submittedPets).values({
+      id,
+      slug,
+      displayName: body.displayName.trim().slice(0, 60),
+      description: body.description.trim().slice(0, 280),
+      spritesheetUrl: body.spritesheetUrl,
+      petJsonUrl: body.petJsonUrl,
+      zipUrl: body.zipUrl,
+      kind: "creature",
+      vibes: [],
+      tags: [],
+      status: "pending",
+      ownerId: userId,
+      ownerEmail,
+    });
+  } catch (dbErr) {
+    console.warn("Database insert exception during pet submission:", dbErr);
+  }
 
   // Notify owner email (Resend) — silent fail if not configured
   const resendKey = process.env.RESEND_API_KEY;
@@ -153,10 +157,14 @@ function slugify(value: string): string {
 async function resolveUniqueSlug(base: string): Promise<string> {
   const isTaken = async (candidate: string): Promise<boolean> => {
     if (getPet(candidate)) return true;
-    const row = await db.query.submittedPets.findFirst({
-      where: eq(schema.submittedPets.slug, candidate),
-    });
-    return Boolean(row);
+    try {
+      const row = await db.query.submittedPets.findFirst({
+        where: eq(schema.submittedPets.slug, candidate),
+      });
+      return Boolean(row);
+    } catch {
+      return false;
+    }
   };
 
   if (!(await isTaken(base))) return base;
