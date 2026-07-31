@@ -12,6 +12,7 @@ import { PetGallery } from "@/components/pet-gallery";
 import { PetSprite } from "@/components/pet-sprite";
 import { PetdexLogo } from "@/components/petdex-logo";
 import { TrackOnClick } from "@/components/track-on-click";
+import Footer2 from "@/components/ui/footer-section-2";
 
 export default async function Home() {
   const pets = await getMergedPets();
@@ -93,6 +94,8 @@ export default async function Home() {
       >
         {pets.length > 0 ? <PetGallery pets={pets} /> : null}
       </section>
+
+      <Footer2 />
     </main>
   );
 }
