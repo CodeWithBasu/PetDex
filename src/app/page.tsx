@@ -14,6 +14,8 @@ import { PetdexLogo } from "@/components/petdex-logo";
 import { TrackOnClick } from "@/components/track-on-click";
 import Footer2 from "@/components/ui/footer-section-2";
 
+export const dynamic = 'force-dynamic';
+
 export default async function Home() {
   const pets = await getMergedPets();
   const featured = pets.filter((pet) => pet.featured);
