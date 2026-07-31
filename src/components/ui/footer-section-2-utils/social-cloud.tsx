@@ -21,7 +21,7 @@ export function SocialCloud({ className }: { className?: string }) {
     <div className={`flex items-center gap-4 ${className || ""}`}>
       <Link
         href="https://github.com/CodeWithBasu/PetDex"
-        className="rounded-full bg-muted/50 p-3 transition-colors hover:bg-muted"
+        className="rounded-full bg-white/10 p-3 transition-all duration-300 hover:bg-white/20 hover:scale-110 hover:-rotate-6"
         target="_blank"
         rel="noopener noreferrer"
       >
@@ -29,7 +29,7 @@ export function SocialCloud({ className }: { className?: string }) {
       </Link>
       <Link
         href="#"
-        className="rounded-full bg-muted/50 p-3 transition-colors hover:bg-muted"
+        className="rounded-full bg-white/10 p-3 transition-all duration-300 hover:bg-white/20 hover:scale-110 hover:rotate-6"
         target="_blank"
         rel="noopener noreferrer"
       >
@@ -37,7 +37,7 @@ export function SocialCloud({ className }: { className?: string }) {
       </Link>
       <Link
         href="#"
-        className="rounded-full bg-muted/50 p-3 transition-colors hover:bg-muted"
+        className="rounded-full bg-white/10 p-3 transition-all duration-300 hover:bg-white/20 hover:scale-110 hover:-rotate-6"
         target="_blank"
         rel="noopener noreferrer"
       >
@@ -45,7 +45,7 @@ export function SocialCloud({ className }: { className?: string }) {
       </Link>
       <Link
         href="#"
-        className="rounded-full bg-muted/50 p-3 transition-colors hover:bg-muted"
+        className="rounded-full bg-white/10 p-3 transition-all duration-300 hover:bg-white/20 hover:scale-110 hover:rotate-6"
         target="_blank"
         rel="noopener noreferrer"
       >

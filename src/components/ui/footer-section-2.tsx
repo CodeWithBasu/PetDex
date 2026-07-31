@@ -145,42 +145,14 @@ export default function Footer2() {
           transition={{ duration: 0.5 }}
           className="bg-(--color-primary) rounded-md p-8 md:px-12 md:py-10 overflow-hidden flex flex-col md:flex-row items-center md:items-stretch justify-between relative max-w-7xl mx-auto"
         >
-          {/* Left Section */}
-          <div className="flex flex-col justify-between z-10 w-full md:w-1/2 space-y-6 md:space-y-0">
+          {/* Content Section */}
+          <div className="flex flex-col justify-between z-10 w-full md:w-3/4 space-y-6 md:space-y-0">
             <div className="space-y-6">
               <h2 className="text-3xl md:text-3xl lg:text-4xl font-bold text-white leading-tight">
                 The AI Workspace
                 <br />
                 That Works For You
               </h2>
-
-              <div className="flex flex-wrap gap-4">
-                <Link
-                  href=""
-                  className="dark:hidden shadow-lg transition-transform hover:scale-105"
-                >
-                  {downloadAppleLight()}
-                </Link>
-                <Link
-                  href=""
-                  className="dark:hidden shadow-lg transition-transform hover:scale-105"
-                >
-                  {downloadGoogleLight()}
-                </Link>
-                {/* dark-mode buttons */}
-                <Link
-                  href=""
-                  className="hidden dark:block shadow-lg transition-transform hover:scale-105"
-                >
-                  {downloadAppleDark()}
-                </Link>
-                <Link
-                  href=""
-                  className="hidden dark:block shadow-lg transition-transform hover:scale-105"
-                >
-                  {downloadGoogleDark()}
-                </Link>
-              </div>
             </div>
 
             <div className="flex flex-col space-y-3 md:space-y-6 md:mt-16">
@@ -203,29 +175,6 @@ export default function Footer2() {
               </div>
             </div>
           </div>
-
-          {/* Right Section */}
-          <div className="w-full flex flex-col justify-end items-center md:items-end md:absolute md:bottom-0 md:right-0 md:pr-12 md:pb-0 lg:pr-16 pointer-events-none">
-            {/* Image Container */}
-            <div
-              className="relative w-auto pointer-events-auto rounded-t-md translate-y-20 md:translate-y-45 lg:translate-y-40"
-              style={{
-                boxShadow: "2px -5px 20px 8px rgba(255, 255, 255, 0.47)",
-                marginBottom: "-1px", // Ensure it flushes with the bottom
-              }}
-            >
-              <Image
-                src="https://res.cloudinary.com/harshitproject/image/upload/v1746774805/Notion-screen.png"
-                alt="App Screenshot"
-                width={800}
-                height={1000}
-                className="h-[450px] md:h-[500px] w-auto rounded-t-md block object-cover object-top"
-              />
-            </div>
-          </div>
-
-          {/* Mobile Bottom Fade */}
-          <div className="absolute bottom-0 left-0 w-full h-32 md:h-20 bg-gradient-to-t from-[#003AF9] to-transparent pointer-events-none z-20" />
         </motion.div>
       </div>
     </section>
