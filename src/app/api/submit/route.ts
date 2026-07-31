@@ -160,7 +160,7 @@ export async function POST(req: Request) {
       zipUrl: body.zipUrl!,
       kind: "creature",
       vibes: [],
-      tags: [],
+      tags: inferTags(`${body.displayName} ${body.description}`),
       status: "pending",
       ownerId: effectiveUserId,
       ownerEmail,
@@ -232,4 +232,51 @@ async function resolveUniqueSlug(base: string): Promise<string> {
 
   // last resort: append short random hex
   return `${base.slice(0, 32)}-${crypto.randomUUID().slice(0, 6)}`;
+}
+
+function inferTags(text: string) {
+  const normalized = text.toLowerCase();
+  const tags = new Set<string>();
+
+  for (const [needle, tag] of [
+    ["cat", "cat"],
+    ["dog", "dog"],
+    ["duck", "duck"],
+    ["astronaut", "astronaut"],
+    ["astronaut", "space"],
+    ["space", "space"],
+    ["microwave", "object-pet"],
+    ["otter", "otter"],
+    ["rabbit", "rabbit"],
+    ["bunny", "rabbit"],
+    ["capybara", "capybara"],
+    ["koala", "koala"],
+    ["panda", "panda"],
+    ["penguin", "penguin"],
+    ["ice cream", "sweet"],
+    ["bubble tea", "drink"],
+    ["box", "cozy"],
+    ["cardboard", "cozy"],
+    ["calm", "calm"],
+    ["cheerful", "cheerful"],
+    ["pixel", "pixel"],
+    ["scroll", "scroll"],
+    ["prompt", "prompt"],
+    ["keyboard", "keyboard"],
+    ["fintech", "fintech"],
+    ["snack", "snacks"],
+    ["mecha", "mecha"],
+    ["robot", "mecha"],
+    ["sword", "sword"],
+    ["demon", "demon"],
+    ["dark", "dark"],
+    ["chibi", "chibi"],
+    ["red", "red"],
+  ] as const) {
+    if (normalized.includes(needle)) {
+      tags.add(tag);
+    }
+  }
+
+  return [...tags];
 }
