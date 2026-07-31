@@ -14,6 +14,8 @@ import { PetdexLogo } from "@/components/petdex-logo";
 import { TrackOnClick } from "@/components/track-on-click";
 import Footer2 from "@/components/ui/footer-section-2";
 
+import { AnimatedThemeToggler } from "@/components/ui/animated-theme-toggler";
+
 export const dynamic = 'force-dynamic';
 
 export default async function Home() {
@@ -22,12 +24,12 @@ export default async function Home() {
   const heroPets = (featured.length > 0 ? featured : pets).slice(0, 6);
 
   return (
-    <main className="min-h-screen bg-[#f7f8ff] text-[#050505]">
+    <main className="min-h-screen bg-[#f7f8ff] text-[#050505] dark:bg-zinc-950 dark:text-zinc-50 transition-colors duration-300">
       <section className="petdex-cloud relative overflow-hidden">
         <div className="relative mx-auto flex w-full max-w-7xl flex-col px-5 pt-5 pb-10 md:px-8">
           <nav className="flex items-center justify-between gap-4">
             <PetdexLogo href="/" />
-            <div className="hidden items-center gap-9 text-sm text-[#4f515c] md:flex">
+            <div className="hidden items-center gap-9 text-sm text-[#4f515c] dark:text-zinc-400 md:flex">
               <a href="#gallery">Gallery</a>
               <Link href="/submit">Submit</Link>
               <a href="/packs/manifest.json">Manifest</a>
@@ -35,16 +37,17 @@ export default async function Home() {
                 href="https://github.com/CodeWithBasu/PetDex"
                 target="_blank"
                 rel="noreferrer"
-                className="inline-flex items-center gap-1.5 transition hover:text-black"
+                className="inline-flex items-center gap-1.5 transition hover:text-black dark:hover:text-white"
               >
                 <GithubIcon className="size-4" />
                 GitHub
               </a>
             </div>
             <div className="flex items-center gap-3">
+              <AnimatedThemeToggler sound={true} />
               <Link
                 href="/submit"
-                className="inline-flex h-10 items-center justify-center rounded-full bg-black px-4 text-sm font-medium text-white transition hover:bg-black/85"
+                className="inline-flex h-10 items-center justify-center rounded-full bg-black px-4 text-sm font-medium text-white transition hover:bg-black/85 dark:bg-white dark:text-black dark:hover:bg-white/85"
               >
                 Submit a pet
               </Link>
