@@ -21,35 +21,35 @@ export function SocialCloud({ className }: { className?: string }) {
     <div className={`flex items-center gap-4 ${className || ""}`}>
       <Link
         href="https://github.com/CodeWithBasu/PetDex"
-        className="rounded-full bg-white/10 p-3 transition-all duration-300 hover:bg-white/20 hover:scale-110 hover:-rotate-6"
+        className="transition-all duration-300 hover:scale-110 hover:-rotate-6"
         target="_blank"
         rel="noopener noreferrer"
       >
-        <Github className="h-5 w-5" />
+        <Github className="h-6 w-6" />
       </Link>
       <Link
         href="#"
-        className="rounded-full bg-white/10 p-3 transition-all duration-300 hover:bg-white/20 hover:scale-110 hover:rotate-6"
+        className="transition-all duration-300 hover:scale-110 hover:rotate-6"
         target="_blank"
         rel="noopener noreferrer"
       >
-        <Twitter className="h-5 w-5" />
+        <Twitter className="h-6 w-6" />
       </Link>
       <Link
         href="#"
-        className="rounded-full bg-white/10 p-3 transition-all duration-300 hover:bg-white/20 hover:scale-110 hover:-rotate-6"
+        className="transition-all duration-300 hover:scale-110 hover:-rotate-6"
         target="_blank"
         rel="noopener noreferrer"
       >
-        <Linkedin className="h-5 w-5" />
+        <Linkedin className="h-6 w-6" />
       </Link>
       <Link
         href="#"
-        className="rounded-full bg-white/10 p-3 transition-all duration-300 hover:bg-white/20 hover:scale-110 hover:rotate-6"
+        className="transition-all duration-300 hover:scale-110 hover:rotate-6"
         target="_blank"
         rel="noopener noreferrer"
       >
-        <Discord className="h-5 w-5" />
+        <Discord className="h-6 w-6" />
       </Link>
     </div>
   );
