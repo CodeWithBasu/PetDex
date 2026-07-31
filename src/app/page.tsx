@@ -56,15 +56,15 @@ export default async function Home() {
           </nav>
 
           <div className="mt-12 flex flex-col items-center text-center md:mt-16">
-            <p className="font-mono text-xs tracking-[0.22em] text-[#5266ea] uppercase">
+            <p className="font-mono text-xs tracking-[0.22em] text-[#5266ea] dark:text-[#7f90ff] uppercase">
               The Codex pet index
             </p>
-            <h1 className="mt-3 text-[48px] leading-[0.98] font-semibold tracking-tight md:text-[80px]">
+            <h1 className="mt-3 text-[48px] leading-[0.98] font-semibold tracking-tight md:text-[80px] dark:text-zinc-50">
               Petdex
             </h1>
-            <p className="mt-5 max-w-xl text-balance text-base leading-7 text-[#202127] md:text-lg">
+            <p className="mt-5 max-w-xl text-balance text-base leading-7 text-[#202127] dark:text-zinc-300 md:text-lg">
               A public gallery of animated pets for Codex.{" "}
-              <span className="text-stone-500">
+              <span className="text-stone-500 dark:text-stone-400">
                 {petStates.length} states each. Drop in, animate, ship.
               </span>
             </p>
@@ -123,7 +123,7 @@ function HeroPetParade({ pets }: HeroPetParadeProps) {
             key={pet.slug}
             href={`/pets/${pet.slug}`}
             aria-label={`Open ${pet.displayName}`}
-            className={`group relative flex flex-col items-center rounded-2xl border border-white/70 bg-white/55 px-3 pt-3 pb-2 shadow-lg shadow-blue-900/10 backdrop-blur-md transition hover:-translate-y-1 hover:bg-white ${tilt} ${lift}`}
+            className={`group relative flex flex-col items-center rounded-2xl border border-white/70 dark:border-white/10 bg-white/55 dark:bg-zinc-900/50 px-3 pt-3 pb-2 shadow-lg shadow-blue-900/10 dark:shadow-none backdrop-blur-md transition hover:-translate-y-1 hover:bg-white dark:hover:bg-zinc-800 ${tilt} ${lift}`}
           >
             <PetSprite
               src={pet.spritesheetPath}
@@ -132,7 +132,7 @@ function HeroPetParade({ pets }: HeroPetParadeProps) {
               scale={0.55}
               label={`${pet.displayName} animated`}
             />
-            <span className="mt-1 font-mono text-[10px] tracking-[0.18em] text-stone-700 uppercase">
+            <span className="mt-1 font-mono text-[10px] tracking-[0.18em] text-stone-700 dark:text-stone-400 uppercase">
               {pet.displayName}
             </span>
           </Link>

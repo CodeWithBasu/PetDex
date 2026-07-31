@@ -55,6 +55,28 @@ input {
     linear-gradient(120deg, #d8e9ff 0%, #f7f8ff 47%, #c9c6ff 100%);
 }
 
+.dark .petdex-cloud {
+  background:
+    radial-gradient(
+      circle at 49% 18%,
+      rgb(40 40 60 / 0.96) 0 13%,
+      rgb(30 30 50 / 0.62) 24%,
+      transparent 42%
+    ),
+    radial-gradient(
+      circle at 12% 68%,
+      rgb(20 20 40 / 0.9) 0 20%,
+      transparent 48%
+    ),
+    radial-gradient(
+      circle at 83% 44%,
+      rgb(40 45 90 / 0.82) 0 25%,
+      rgb(30 35 70 / 0.62) 43%,
+      transparent 68%
+    ),
+    linear-gradient(120deg, #0f111a 0%, #171926 47%, #0a0b10 100%);
+}
+
 .petdex-cloud::before {
   position: absolute;
   inset: 0;
@@ -78,6 +100,26 @@ input {
       rgb(255 255 255 / 0.1)
     );
   filter: blur(18px);
+}
+
+.dark .petdex-cloud::before {
+  background:
+    radial-gradient(
+      ellipse at 18% 48%,
+      rgb(100 100 255 / 0.1),
+      transparent 34%
+    ),
+    radial-gradient(
+      ellipse at 30% 38%,
+      rgb(100 100 255 / 0.05),
+      transparent 28%
+    ),
+    linear-gradient(
+      100deg,
+      rgb(100 100 255 / 0.08),
+      transparent 35%,
+      rgb(100 100 255 / 0.04)
+    );
 }
 
 .glass-panel {
