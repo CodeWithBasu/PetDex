@@ -29,7 +29,7 @@ export default async function Home() {
               <Link href="/submit">Submit</Link>
               <a href="/packs/manifest.json">Manifest</a>
               <a
-                href="https://github.com/crafter-station/petdex"
+                href="https://github.com/CodeWithBasu/PetDex"
                 target="_blank"
                 rel="noreferrer"
                 className="inline-flex items-center gap-1.5 transition hover:text-black"
