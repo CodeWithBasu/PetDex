@@ -27,7 +27,7 @@ export function DownloadActions({
         </div>
       ) : null}
       <a
-        href={getPetPackPath(pet.slug)}
+        href={pet.zipUrl || getPetPackPath(pet.slug)}
         download
         className="inline-flex h-10 items-center justify-center gap-2 rounded-full bg-black px-4 text-sm font-medium text-white transition hover:bg-black/85"
       >

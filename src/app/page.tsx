@@ -4,7 +4,7 @@ import { Download } from "lucide-react";
 
 import { getAllPetsPackPath } from "@/lib/downloads";
 import { petStates } from "@/lib/pet-states";
-import { getPets } from "@/lib/pets";
+import { getMergedPets } from "@/lib/pets";
 
 import { AuthBadge } from "@/components/auth-badge";
 import { GithubIcon } from "@/components/github-icon";
@@ -13,8 +13,8 @@ import { PetSprite } from "@/components/pet-sprite";
 import { PetdexLogo } from "@/components/petdex-logo";
 import { TrackOnClick } from "@/components/track-on-click";
 
-export default function Home() {
-  const pets = getPets();
+export default async function Home() {
+  const pets = await getMergedPets();
   const featured = pets.filter((pet) => pet.featured);
   const heroPets = (featured.length > 0 ? featured : pets).slice(0, 6);
 
@@ -98,7 +98,7 @@ export default function Home() {
 }
 
 type HeroPetParadeProps = {
-  pets: ReturnType<typeof getPets>;
+  pets: Awaited<ReturnType<typeof getMergedPets>>;
 };
 
 function HeroPetParade({ pets }: HeroPetParadeProps) {

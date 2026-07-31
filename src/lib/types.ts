@@ -17,6 +17,7 @@ export type PetdexPet = {
   description: string;
   spritesheetPath: string;
   petJsonPath: string;
+  zipUrl?: string;
   approvalState: ApprovalState;
   featured?: boolean;
   kind: PetKind;
