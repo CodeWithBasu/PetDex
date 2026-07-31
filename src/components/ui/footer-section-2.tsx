@@ -215,7 +215,7 @@ export default function Footer2() {
               }}
             >
               <Image
-                src="https://images.unsplash.com/photo-1498050108023-c5249f4df085?auto=format&fit=crop&q=80&w=800&h=1000"
+                src="https://res.cloudinary.com/harshitproject/image/upload/v1746774805/Notion-screen.png"
                 alt="App Screenshot"
                 width={800}
                 height={1000}
