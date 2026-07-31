@@ -72,10 +72,10 @@ export function PetGallery({ pets }: PetGalleryProps) {
     <section className="space-y-6">
       <div className="flex flex-col gap-3 lg:flex-row lg:items-end lg:justify-between">
         <div>
-          <p className="font-mono text-xs tracking-[0.18em] text-[#6478f6] uppercase">
+          <p className="font-mono text-xs tracking-[0.18em] text-[#6478f6] dark:text-[#7f90ff] uppercase">
             Gallery — {pets.length} pets
           </p>
-          <h2 className="mt-2 text-3xl font-medium tracking-tight text-black md:text-5xl">
+          <h2 className="mt-2 text-3xl font-medium tracking-tight text-black dark:text-zinc-50 md:text-5xl">
             Pick a companion
           </h2>
         </div>
@@ -85,14 +85,14 @@ export function PetGallery({ pets }: PetGalleryProps) {
             value={query}
             onChange={(event) => setQuery(event.target.value)}
             placeholder="Search pets, vibes"
-            className="h-12 w-full rounded-full border border-black/10 bg-white pr-10 pl-11 text-sm text-stone-900 outline-none transition placeholder:text-stone-400 focus:border-black/40"
+            className="h-12 w-full rounded-full border border-black/10 dark:border-zinc-800 bg-white dark:bg-zinc-950 pr-10 pl-11 text-sm text-stone-900 dark:text-zinc-100 outline-none transition placeholder:text-stone-400 dark:placeholder:text-zinc-500 focus:border-black/40 dark:focus:border-zinc-700"
           />
           {query.length > 0 ? (
             <button
               type="button"
               onClick={() => setQuery("")}
               aria-label="Clear search"
-              className="-translate-y-1/2 absolute top-1/2 right-3 grid size-6 place-items-center rounded-full text-stone-400 transition hover:bg-stone-100 hover:text-stone-700"
+              className="-translate-y-1/2 absolute top-1/2 right-3 grid size-6 place-items-center rounded-full text-stone-400 transition hover:bg-stone-100 dark:hover:bg-zinc-800 hover:text-stone-700 dark:hover:text-stone-300"
             >
               <X className="size-3.5" />
             </button>
@@ -100,7 +100,7 @@ export function PetGallery({ pets }: PetGalleryProps) {
         </label>
       </div>
 
-      <div className="space-y-3 rounded-2xl border border-black/[0.08] bg-white/55 px-4 py-4 backdrop-blur md:px-5">
+      <div className="space-y-3 rounded-2xl border border-black/[0.08] dark:border-white/10 bg-white/55 dark:bg-zinc-900/50 px-4 py-4 backdrop-blur md:px-5">
         <FilterGroup
           label="Kind"
           options={PET_KINDS}
@@ -144,15 +144,15 @@ export function PetGallery({ pets }: PetGalleryProps) {
       </div>
 
       {visiblePets.length === 0 ? (
-        <div className="rounded-2xl border border-dashed border-black/15 bg-white/70 p-10 text-center">
-          <p className="text-sm font-medium text-stone-950">
+        <div className="rounded-2xl border border-dashed border-black/15 dark:border-white/15 bg-white/70 dark:bg-zinc-900/70 p-10 text-center">
+          <p className="text-sm font-medium text-stone-950 dark:text-zinc-50">
             No pets match this view.
           </p>
           {filtersActive ? (
             <button
               type="button"
               onClick={clearFilters}
-              className="mt-3 inline-flex h-9 items-center justify-center rounded-full border border-black/10 bg-white px-4 text-xs font-medium text-stone-700 transition hover:border-black/30"
+              className="mt-3 inline-flex h-9 items-center justify-center rounded-full border border-black/10 dark:border-white/10 bg-white dark:bg-zinc-950 px-4 text-xs font-medium text-stone-700 dark:text-zinc-300 transition hover:border-black/30 dark:hover:border-white/30"
             >
               Clear filters
             </button>
@@ -180,7 +180,7 @@ function FilterGroup({
 }: FilterGroupProps) {
   return (
     <div className="flex flex-col gap-2 md:flex-row md:items-center md:gap-4">
-      <p className="w-16 shrink-0 font-mono text-[10px] tracking-[0.22em] text-stone-500 uppercase">
+      <p className="w-16 shrink-0 font-mono text-[10px] tracking-[0.22em] text-stone-500 dark:text-stone-400 uppercase">
         {label}
       </p>
       <div className="flex flex-wrap gap-1.5">
@@ -196,14 +196,14 @@ function FilterGroup({
               aria-pressed={isActive}
               className={`inline-flex h-8 items-center gap-1.5 rounded-full border px-3 font-mono text-[11px] tracking-[0.08em] capitalize transition ${
                 isActive
-                  ? "border-black bg-black text-white"
-                  : "border-black/10 bg-white text-stone-700 hover:border-black/30"
+                  ? "border-black bg-black text-white dark:border-white dark:bg-white dark:text-black"
+                  : "border-black/10 bg-white text-stone-700 hover:border-black/30 dark:border-white/10 dark:bg-zinc-950 dark:text-stone-300 dark:hover:border-white/30"
               }`}
             >
               <span>{value}</span>
               <span
                 className={`text-[10px] ${
-                  isActive ? "text-white/60" : "text-stone-400"
+                  isActive ? "text-white/60 dark:text-black/60" : "text-stone-400 dark:text-stone-500"
                 }`}
               >
                 {count}
@@ -228,10 +228,10 @@ function PetCard({ pet, index, stateCount }: PetCardProps) {
   return (
     <Link
       href={`/pets/${pet.slug}`}
-      className={`group relative flex flex-col overflow-hidden rounded-3xl border bg-white/76 backdrop-blur transition hover:-translate-y-0.5 hover:bg-white hover:shadow-xl hover:shadow-blue-950/10 ${
+      className={`group relative flex flex-col overflow-hidden rounded-3xl border bg-white/76 dark:bg-zinc-900/60 backdrop-blur transition hover:-translate-y-0.5 hover:bg-white dark:hover:bg-zinc-800 hover:shadow-xl hover:shadow-blue-950/10 dark:hover:shadow-none ${
         pet.featured
-          ? "border-[#6478f6]/45 shadow-[0_0_0_1px_rgba(100,120,246,0.18),0_18px_45px_-22px_rgba(82,102,234,0.5)]"
-          : "border-black/10 shadow-sm shadow-blue-950/5"
+          ? "border-[#6478f6]/45 shadow-[0_0_0_1px_rgba(100,120,246,0.18),0_18px_45px_-22px_rgba(82,102,234,0.5)] dark:shadow-[0_0_0_1px_rgba(100,120,246,0.4)]"
+          : "border-black/10 dark:border-white/10 shadow-sm shadow-blue-950/5 dark:shadow-none"
       }`}
     >
       <div className="relative flex items-center justify-between border-b border-black/[0.06] px-5 pt-4 pb-3">
@@ -265,14 +265,14 @@ function PetCard({ pet, index, stateCount }: PetCardProps) {
 
       <div className="flex flex-col gap-2 border-t border-black/[0.06] px-5 py-4">
         <div className="flex items-center justify-between gap-2">
-          <h3 className="text-lg font-semibold tracking-tight text-stone-950">
+          <h3 className="text-lg font-semibold tracking-tight text-stone-950 dark:text-zinc-50">
             {pet.displayName}
           </h3>
-          <span className="font-mono text-[10px] tracking-[0.18em] text-stone-400 uppercase">
+          <span className="font-mono text-[10px] tracking-[0.18em] text-stone-400 dark:text-stone-500 uppercase">
             {pet.kind}
           </span>
         </div>
-        <p className="line-clamp-2 text-sm leading-6 text-stone-600">
+        <p className="line-clamp-2 text-sm leading-6 text-stone-600 dark:text-stone-300">
           {pet.description}
         </p>
         {pet.vibes.length > 0 ? (

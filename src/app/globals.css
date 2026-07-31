@@ -1,5 +1,7 @@
 @import "tailwindcss";
 
+@variant dark (&:where(.dark, .dark *));
+
 :root {
   --background: #f7f8ff;
   --foreground: #050505;
@@ -55,7 +57,7 @@ input {
     linear-gradient(120deg, #d8e9ff 0%, #f7f8ff 47%, #c9c6ff 100%);
 }
 
-.dark .petdex-cloud {
+html.dark .petdex-cloud {
   background:
     radial-gradient(
       circle at 49% 18%,
@@ -102,7 +104,7 @@ input {
   filter: blur(18px);
 }
 
-.dark .petdex-cloud::before {
+html.dark .petdex-cloud::before {
   background:
     radial-gradient(
       ellipse at 18% 48%,
