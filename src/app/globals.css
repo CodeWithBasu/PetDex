@@ -61,22 +61,22 @@ html.dark .petdex-cloud {
   background:
     radial-gradient(
       circle at 49% 18%,
-      rgb(40 40 60 / 0.96) 0 13%,
-      rgb(30 30 50 / 0.62) 24%,
-      transparent 42%
+      rgb(60 70 120 / 0.7) 0 15%,
+      rgb(40 45 90 / 0.4) 28%,
+      transparent 55%
     ),
     radial-gradient(
       circle at 12% 68%,
-      rgb(20 20 40 / 0.9) 0 20%,
-      transparent 48%
+      rgb(45 55 105 / 0.6) 0 25%,
+      transparent 60%
     ),
     radial-gradient(
       circle at 83% 44%,
-      rgb(40 45 90 / 0.82) 0 25%,
-      rgb(30 35 70 / 0.62) 43%,
-      transparent 68%
+      rgb(90 100 190 / 0.5) 0 25%,
+      rgb(60 70 150 / 0.3) 45%,
+      transparent 75%
     ),
-    linear-gradient(120deg, #0f111a 0%, #171926 47%, #0a0b10 100%);
+    linear-gradient(120deg, #0a0c16 0%, #121422 47%, #090b14 100%);
 }
 
 .petdex-cloud::before {
@@ -108,19 +108,19 @@ html.dark .petdex-cloud::before {
   background:
     radial-gradient(
       ellipse at 18% 48%,
-      rgb(100 100 255 / 0.1),
-      transparent 34%
+      rgb(140 150 255 / 0.18),
+      transparent 45%
     ),
     radial-gradient(
       ellipse at 30% 38%,
-      rgb(100 100 255 / 0.05),
-      transparent 28%
+      rgb(140 150 255 / 0.12),
+      transparent 40%
     ),
     linear-gradient(
       100deg,
-      rgb(100 100 255 / 0.08),
-      transparent 35%,
-      rgb(100 100 255 / 0.04)
+      rgb(140 150 255 / 0.15),
+      transparent 45%,
+      rgb(140 150 255 / 0.08)
     );
 }
 
